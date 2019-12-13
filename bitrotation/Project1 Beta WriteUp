@@ -1,0 +1,73 @@
+Project1 Beta WriteUp
+rdelaus-yiannig
+
+Before writing any code, we wrote a python script that generated test cases to cover a large portion of the input space.
+
+Our first step towards boosting performance was to implement the (A^RB^R)^R = BA algorithm mentioned in the pset. We created a reverse method that swapped bits to reverse a given subarray.
+We utilized our reverse method three times to implement the reverse-rotate algorithm. This version was succesful up to tier 35.
+
+After brainstorming for a couple hours, we figured the next best approach to making further optimizations was to revamp the reverse function by implementing byte swapping instead
+of bit swapping. Although we thought this would be a pretty straightforward implementation, edge cases like dealing with garbage bits at the end of the buffer and working with
+subarrays that did not fully overlap bytes slowed our progress. Here was the method we came up with to handle these cases:
+
+If we were given a subarray whose start and end indices intersected bytes (instead of fitting a whole number of bytes in the subarray), we would determine the bits that would be added
+to the subarray if we expanded the subarray to include the bytes that were cut off. These extra bits would be stored in an array. Once we determined these extra bits, we expanded the
+subarray to include the intersected bytes. We then reversed the elements in the subarray by swapping bytes from index i to index k-i where i is the first index and k is the last index
+in the array. As a byte was swapped, it was reversed using a byte-reversal lookup table that was metaprogrammed and pasted into a header file. This allowed us to compute the reversal of
+a byte in O(1) time. Once all the bytes in the expanded subarray were swapped and reversed, all the bits in the expanded subarray were reversed. We then needed to rotate the subarray by 
+a given amount depending on the start and end overhanging bits that existed before we expanded the subarray. If the start and end overhang amounts differed, we would rotate the expanded subarray
+by a certain amount to move the bits to there proper location. Once the btis were moved to there proper locations, the extra bits that were saved before the reversal process were readded at 
+there original indices.
+
+We encountered several bugs when implementing this process. There were multiple instance where we tried to compare elements of different types, for example an int and size_t. These led to lots
+of bugs. The process of implementing byte swapping took about 8 hours. Unfortunately, when we tested byte swapping, our implementation performed at Tier 33. Now granted, we still believe that byte
+swapping is a much better approach then bit swapping. However, since we only had a couple hours before the deadline, we figured we did not have enough time to optimize byte swapping to its full
+capacity. Instead, and sadly, we were forced to resort back to our original implementation of bit swapping.
+
+We encountered a strange bug when implementing some bit hacking for bit shifting when trying to improve the performance of our byte implementation. I think the source of the bug lied in the fact that
+chars are stored in little endian fashion. This took us a long time to realize and, once we realized the issue, ran out of time to fix the issue.
+
+In the future it would be wise to allot more time for improving performance. We assumed the process would be easier and less time consuming that it actually was. Although we byte swapping, at its core
+is a faster approach then bit swapping, we did not have enough time to actually make our implementation faster than the original. Had we started a little early, it would have been fairly easy to 
+boost our code to tier 40, maybe tier 42.
+
+As far as the general completeness of our code, we ultimately failed to reach our goal of implementing byte swapping. For the final we plan to, at the bare minimum, implement byte swapping and have the code
+perform better than when utilizing bit swapping.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

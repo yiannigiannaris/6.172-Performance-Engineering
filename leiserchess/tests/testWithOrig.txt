@@ -1,0 +1,15 @@
+cpus = 12
+game_rounds = 50
+title = basic
+adjudicate = 400
+
+# now we have the player definitions
+# --
+
+player = p_l_coverage
+invoke = ../player/leiserchess
+fis = 20 0.5
+
+player = p_original
+invoke = ../player/coverageOpt
+fis = 20 0.5

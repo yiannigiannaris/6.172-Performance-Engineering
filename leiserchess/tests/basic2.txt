@@ -1,0 +1,15 @@
+cpus = 2
+game_rounds = 5
+title = basic
+adjudicate = 400
+
+# now we have the player definitions
+# --
+
+player = depth3
+invoke = ../player/leiserchess
+depth = 3
+
+player = depth4
+invoke = ../player/leiserchess
+depth = 4

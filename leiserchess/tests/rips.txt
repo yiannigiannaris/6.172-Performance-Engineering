@@ -1,0 +1,15 @@
+cpus = 12
+game_rounds = 100
+title = basic
+adjudicate = 400
+
+# now we have the player definitions
+# --
+
+player = ours
+invoke = ../player/SSPar9016958
+fis = 20 0.5
+
+player = rips&gumbo
+invoke = ../player/leiserchess_gumbini
+fis = 20 0.5

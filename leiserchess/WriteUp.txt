@@ -1,0 +1,133 @@
+
+arpl-yiannig
+Project 3 Write Up
+
+After reading the prompt for project 3, we decided to decided our malloc, realloc, and free functions would utilize a binned free list to keep track of blocks of memory that had been freed. The binned lists stores pointers to free lists. Free lists are linked lists, where each node is a struct stored in a free block of memory, and each node has a pointer that points to the node in the next free list. Each index in our binned free list represented log base 2 of the size of the blocks of memory stored in the free list at that specific index. Since each index kept track of the log base 2 of the size of each list, and the rough maximum for size memory block that can be allocated is 2^48, the binned list size ranged from 0 to 48.
+
+The algorithm we implemented consists of the following. If memory size k was requested, we first checked to see if we had a block of memory in our binned free list that was greater than or equal to size log_2(k) (rounded up). If a block did not exist, then we extend the heap and returned a new block of memory. If a block did exist and was the exact size, we returned the block. If a larger block exists, then that block is split into halves until we have create the block with an appropriate size. The new smaller blocks generated are placed into their appropriate bins.
+
+Here is a diagram showing the algorithm in more detail:
+
+Initial State of Binned Free List:
+
+
+___|___|___|___|___|___|___|___|___|___|
+ 1   2   3   4   5  ........46  47  48  
+
+When first item is freed:                                                
+                                    ___
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+___|___|___|___|___|___|___|___|___|___|  
+ 1   2   3   4   5  ........46  47  48  
+
+We split the free block in bin 48:
+                                    ___
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |___| <- split
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+___|___|___|___|___|___|___|___|___|___|  
+ 1   2   3   4   5  ........46  47  48  
+
+We move the 1st size 47 free block to bin 47:
+                                    ___
+                                   |   |
+                                   |   |
+                                   |   |
+                                   |   |
+                                ___|___| 
+                               |   |
+                               |   |
+            move new block ->  |   |
+                               |   |
+___|___|___|___|___|___|___|___|___|___|
+ 1   2   3   4   5  ........46  47  48  
+
+We then split 2nd size 47 free block:
+                                    ___
+                                   |   |
+                                   |   |
+                                   |___| <- split
+                                   |   | 
+                                ___|___|
+                               |   |
+                               |   |
+                               |   |
+                               |   |
+___|___|___|___|___|___|___|___|___|___|
+ 1   2   3   4   5  ........46  47  48  
+
+We then move the 1st size 46 free block to bin 46
+and the remaining size 46 six block is the free 
+block that is returned:
+                                    ___
+                                   |   |
+                                   |   | <- size 46 free block that is returned
+                                   |___|
+                                
+                                ___
+                               |   |
+                            ___|   |
+                           |   |   |
+                           |   |   |
+___|___|___|___|___|___|___|___|___|___|
+ 1   2   3   4   5  ........46  47  48  
+
+Final state of Binned Free List:
+                                ___
+                               |   |
+                               |   |
+                            ___|   |
+                           |   |   |
+___|___|___|___|___|___|___|___|___|___|
+ 1   2   3   4   5  ....... 46  47  48  
+
+For our basic implementation, our header for each allocated block of memory consists of 1 byte, representing log_2(k), where k is the size of the memory block. Each block returned is 8 byte aligned and a multiple of 8 bytes. Although the header technically only needed 1 byte of storage, 8 bytes were provided because of the alignment requirements. The header was stored 8 bytes to the left of the pointer returned to the user.
+
+Our my_free() function consisted of putting freed memory blocks back into the binned free list at the proper bin. Our my_realloc() function just called my_malloc() and my_free().
+
+Once we had succeeded in producing a basic implementation of this algorithm, we planned to introduce coalescing. We wanted to coalesce by combining blocks with their corresponding buddies upon deallocation. A buddy of a block is defined as the block that was split away from another block. Two buddies in memory were once joined together before being split. 
+
+Our first attempt to implementing this algorithm used the same header for allocated blocks as before, where the header was 1 byte. The first bit in the header would representing a Boolean indicating if the block was used or free. The remaining 7 bits were used to encode the log of the size of the memory block. Upon freeing a block, we attempted to find its buddy by flipping the k+1 bit in the memory address, where k is log_2(size). K is the number encoded in the last 7 bits of our header. In order for this method to work properly, each 2^k size block of memory would have to be aligned to an address where every bit after the k+1 bit is zero. This is something we had not considered and decided to switch to a different implementation.
+
+Our second implementation attempted to keep track of buddies by storying more information in the header. The header would contain 7 bits encoding the size of the memory block, 1 bit encode a Boolean value indicating whether the block was used or free, 24 bits representing the history from the current block up to the final parent block whether the block was a right buddy or left buddy, and 24 bits representing the history form the current block up to the final parent block whether the block had or did not have buddy. 
+
+The algorithm consisted of, upon splitting a block, whether the block was a left or right buddy, if it had a buddy, and the size of the memory block. Each time a block was split, the is_right  and has_buddy binary lists would be split and stored in the child blocks. These binary strings would then be concatenated when the blocks were recombined. Unfortunately, we ran out of time when trying to implement this.
+
+For the final, we plan on first briefly analyzing the anonymized code and then deciding whether we want to implement our coalescing algorithm or take another appraoach.
+
+Because we spent a large chunk of time on attempting to coalesce, we did not have time to optimize our basic implementation of binned free lists or use open tuner to optimize some parameters in the algorithm. A couple parameters we could’ve optimize on however would be the minimum size memory block, maximum size memory block, and number of times we coalesce blocks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

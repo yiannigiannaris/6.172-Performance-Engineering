@@ -1,0 +1,8 @@
+Yianni Giannaris
+Personal WriteUp Project 3
+
+
+
+For project 3, my partner and I pair programmed most of the project. We would alternate between who was typing and who was observing. I thought the final half of the project went well. We allocated enough time to implement a working implementation and optimizing to the goal we set for ourselves. I was quite surprised by the bottlenecks we found in our code. The largest bottleneck was the the while loop that was implemented in our logarithm function. Once we found a better implementation of a logarithm, our performance index improved by 12 points. 
+
+I thoroughly enjoyed working with my partner, I think we somewhat matched in skill level and were easily able to find our bugs and work through problems. Now that I have built up more confidence in C, for the final project I may want to try doing less peer programming and more individual programming so we can get more tasks done. This will also depend on how comfortable my teammates are.

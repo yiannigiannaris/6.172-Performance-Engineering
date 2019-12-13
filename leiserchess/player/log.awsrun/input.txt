@@ -1,0 +1,5 @@
+move g4L
+move b3L
+setoption name reset_rng value 1
+go depth 8
+quit

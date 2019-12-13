@@ -1,0 +1,15 @@
+cpus = 12
+game_rounds = 50
+title = basic
+adjudicate = 400
+
+# now we have the player definitions
+# --
+
+player = player1
+invoke = ../player/leiserchess
+fis = 20 0.5
+
+player = ref
+invoke = ../player/refLeiserchess
+fis = 20 0.5

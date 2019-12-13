@@ -1,0 +1,8 @@
+Yianni Giannaris
+Project 2 Individual Write Up
+
+My partner and I pair programmed our implementation. This allowed both of us to make design decisions together and understand the full code base well together. We initially tried several different implementations. Our first approach was to implement a quadtree to minimize intersection checks. We then tried replacing the quadtree with a quadtree like linked list. This approach was significantly slower, so we decided to stick to our original quadtree approach. We experimented with building our quadtree one line at a time and building our quadtree by passing multiple lines down the tree. We decided to stick with the latter because it parallelized better. In addition to these changes, we altered some of the reference code to speed up functions such as intersect(). With all of these changes, we got a very significant speedup from the reference implementation.
+
+For the final version of the project, we compared anonymized code to ours and discovered that we were not checking if the rectangles surrounding line parallelograms intersected before we checked if the parallelograms intersected. Implementing this gave us siginifcant speed up. In addition, my MIT POSSE leader gave me tips on how we can organize our functions to make our implementation more intuitive and readable. We implemented these changes as well.
+
+We completed the project together, thinking through optimal solution approaches and implementing solutions. I did not have any issues with my partner.
